@@ -1,11 +1,16 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
+import Header from './components/Header/Header';
+import Layout from './components/Dashboard/Layout/Layout';
 
 function App() {
   return (
-    <Button variant="contained">Hello world</Button>
+   <div>
+         <Header/>
+         <Layout/>
+   </div> 
+  
+    
   );
 }
 
 export default App;
-  
