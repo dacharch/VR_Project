@@ -1,10 +1,11 @@
+import * as React from 'react';
+import Button from '@mui/material/Button';
 
 function App() {
   return (
-     <div>
-       <h2>Hello buddy</h2>
-     </div>
+    <Button variant="contained">Hello world</Button>
   );
 }
 
 export default App;
+  
