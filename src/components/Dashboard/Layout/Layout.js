@@ -13,9 +13,13 @@ import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Button, TextField, } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import Modal from '@mui/material/Modal';
 import { useState } from 'react';
-import Users from "../Users/Users" ;
+import Users from "../Users/Users";
+import Typography from '@mui/material/Typography';
+
 import "./layout.css"
+import AddUserModel from '../../Model/AddUserModel';
 
 const drawerWidth = "240";
 
@@ -45,27 +49,43 @@ const NAVIGATION = [
 ];
 
 
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 600,
+  bgcolor: 'background.paper',
+  borderRadius: 2,
+  boxShadow: 35,
+  p: 2,
+};
+
+
 
 
 const Layout = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
 
   const handleListItem = (number) => {
-     setSelectedIndex(number) ;
+    setSelectedIndex(number);
   }
 
-  const BottomContent = ()=>{
-    
-    switch(selectedIndex){
-       case 0: return <Users/>
-             
+  const BottomContent = () => {
+
+    switch (selectedIndex) {
+      case 0: return <Users />
+
     }
-     
-  
+
+
   }
   return (
     <div className='layout_container'>
-
       <div>
         <Drawer
           sx={{
@@ -155,14 +175,15 @@ const Layout = () => {
             <Button
               size='medium'
               variant='contained'
+              onClick={handleOpen}
             >
               Add New User
             </Button>
           </Box>
         </Box>
-
+         <AddUserModel open={open} onClose={handleClose}/>
         <Box>
-            <BottomContent/>
+          <BottomContent />
         </Box>
       </div>
     </div>
