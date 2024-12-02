@@ -13,15 +13,15 @@ import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Button, TextField, } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import Modal from '@mui/material/Modal';
 import { useState } from 'react';
 import Users from "../Users/Users";
-import Typography from '@mui/material/Typography';
-
-import "./layout.css"
 import AddUserModel from '../../Model/AddUserModel';
+import "./layout.css"
+import { FormState } from '../../../contextApi/StateProvider';
 
 const drawerWidth = "240";
+
+
 
 const NAVIGATION = [
   {
@@ -66,14 +66,36 @@ const style = {
 
 const Layout = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [searchTerm,setSearchTerm] =useState("");
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const {data,setData} = FormState() ;
 
 
   const handleListItem = (number) => {
     setSelectedIndex(number);
   }
+
+  const searchUser  = (e)=>{
+    let value = e.target.value ;
+    if(isNaN(value)){
+      setSearchTerm(value) ;
+    }
+    filterData() ;
+  }
+  
+  const filterData = ()=>{
+    
+      const filteredData = data.filter(item =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setData(filteredData);
+    
+  }
+
+
+
 
   const BottomContent = () => {
 
@@ -139,6 +161,7 @@ const Layout = () => {
             <TextField
               variant="outlined"
               placeholder="Search User..."
+              onChange={searchUser}
 
               sx={{
                 width: '100%',

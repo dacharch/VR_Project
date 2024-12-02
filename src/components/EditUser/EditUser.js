@@ -7,6 +7,7 @@ import Button from '@mui/material/Button'
 import CloseIcon from "@mui/icons-material/Close";
 import { Box } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
+import { FormState } from '../../contextApi/StateProvider';
 
 
 
@@ -14,7 +15,12 @@ const roles = ["Admin", "Editor", "Viewer"];
 const statuses = ["Active", "Inactive"]; 
 const permissions =["Read", "Write", "Update", "ALL"]  ;
 
-const AddUserModel = ({open,onClose}) => {
+const EditUser = ({open,onClose,id}) => {
+  
+  const {data,setData} = FormState() ;
+
+  
+
   return (
     <Modal
     open={open}
@@ -38,10 +44,10 @@ const AddUserModel = ({open,onClose}) => {
     >
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Typography id="add-user-modal-title" variant="h6" component="h2">
-          Add New User
+          Edit User
         </Typography>
         <IconButton >
-          <CloseIcon />
+          <CloseIcon onClick={onClose}/>
         </IconButton>
       </Box>
       <Box
@@ -114,7 +120,7 @@ const AddUserModel = ({open,onClose}) => {
             Cancel
           </Button>
           <Button type="submit" variant="contained" color="primary">
-            Add User
+            Save Changes
           </Button>
         </Box>
       </Box>
@@ -123,4 +129,4 @@ const AddUserModel = ({open,onClose}) => {
   )
 }
 
-export default AddUserModel
+export default EditUser ;

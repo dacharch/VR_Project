@@ -9,19 +9,30 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { FormState } from '../../../contextApi/StateProvider';
+import { useState } from 'react';
+import EditUser from '../../EditUser/EditUser';
 
-import { IconButton } from '@mui/material';
+
+
 
 const columns = [
   { id: 'name', label: 'Name', minWidth: 170 },
-  { id: 'code', label: 'Roles', minWidth: 100 },
+  { id: 'roles', label: 'Roles', minWidth: 100 },
   {
-    id: 'population',
+    id: 'status',
     label: 'Status',
     minWidth: 170,
     align: 'right',
     format: (value) => value.toLocaleString('en-US'),
     
+  },
+  {
+    id: 'permission',
+    label: "Permission",
+    minWidth: 170,
+    align: 'right',
+    format : (value) => value.toLocaleString('en-US'),
   },
   {
     id: 'editUser',
@@ -38,31 +49,24 @@ const columns = [
   },
 ];
 
-function createData(name, code, population, size) {
-  return { name, code, population, size };
-}
 
-const rows = [
-  createData('Neeraj', 'Read', "Active", 3287263),
-  createData('Potter', 'Write', 'In Active', 9596961),
-  createData('Reetu', 'Read', 'Active', 301340),
-  createData('Rani', 'Update', 'In Active', 9833520),
-  createData('Voldemort', 'Read', 'In Active', 9984670),
-  createData('Australia', 'Update', 'In Active', 7692024),
-  createData('Karina', 'Write', 'Active', 357578),
-  createData('Ritika', 'Update', 'In Active', 70273),
-  createData('Pyari', 'Read', 'In Active', 1972550),
-  createData('Sinhaniya', 'Write', 'Active', 377973),
-  createData('Tinku', 'Update', 'In Active', 640679),
-  createData('Raju', 'Admin', 'Active', 242495),
-  createData('Vikas', 'Read', 'In Active', 17098246),
-  createData('Neerja', 'Write', 'Active', 923768),
-  createData('Radhe', 'Update', 'In   Active', 8515767),
-];
 
-export default function U() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+
+
+
+
+export default function Users() {
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] =useState(10);
+  const [open, setOpen] = useState(false);
+  const[userId,setUserId] = useState() ;
+  const {data} = FormState() ;
+
+  const [users, setUpdateUsers] = useState(data) ;
+  
+  const handleClose = () => setOpen(false);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -73,8 +77,21 @@ export default function U() {
     setPage(0);
   };  
 
+  const editUser = (id) =>{
+    setOpen(true) ;    
+    setUserId(id) ;
+  }
+
+  const deleteUser = (id) =>{
+    const updatedUsers = users.filter((user) => user.id !== id);
+    console.log(updatedUsers) ;
+    setUpdateUsers(updatedUsers);
+  }
+
   return (
-    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+
+   <div>
+      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -83,7 +100,7 @@ export default function U() {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidth }}
+                  style={{ minWidth: column.minWidth, backgroundColor:'gray' , color:'white', fontSize:'bold' }}
                 >
                   {column.label}
                 </TableCell>
@@ -91,20 +108,18 @@ export default function U() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
+            {users.map((user) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                  <TableRow hover key={user.id}>
                     {columns.map((column) => {
-                      const value = row[column.id];
+                      const value = user[column.id];
+                      
+                    
                       return (
                         <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === 'number'
-                            ? column.format(value)
-                            : value}
-                          {column.id =="editUser" ? (<EditIcon/>): ''}
-                          {column.id == "deleteUser" ? (<DeleteForeverIcon/>) : ''}
+                          {value}
+                          {column.id =="editUser" ? (<EditIcon onClick={()=>editUser()} style={{cursor:'pointer', color:'green'}}/>): ''}
+                          {column.id == "deleteUser" ? (<DeleteForeverIcon style={{cursor: 'pointer' ,color:'red'} } onClick={()=>deleteUser(user.id)}/>) : ''}
                         </TableCell>
                       );
                     })}
@@ -117,12 +132,18 @@ export default function U() {
       <TablePagination
         rowsPerPageOptions={[10, 25]}
         component="div"
-        count={rows.length}
+        count={users.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
     </Paper>
+
+    <EditUser open={open} onClose={handleClose} id={userId}/>
+
+    
+   </div> 
+   
   );
 }
